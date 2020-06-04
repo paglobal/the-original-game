@@ -107,8 +107,10 @@ function initiate() {
       isPaused = false;
       c.fillStyle = fillColor;
       c.fillRect(0, 0, canvas.width, canvas.height);
+      if (justStarted) {
+        firstTheme.play();
+      }
       justStarted = false;
-      firstTheme.play();
     }
     if (e.keyCode === 80 && paused === false) {
       isPaused = true;
