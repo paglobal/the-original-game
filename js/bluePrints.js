@@ -1,10 +1,17 @@
-//Ship nose class
+//Ship class
 class Ship {
   constructor(x, y, radius, color, lives) {
     this.visible = true;
+    this.visibilityDuration = 2000;
+    this.visibilityTicker = 0;
+    this.invincible = false;
+    this.invincibilityDuration = 600;
+    this.invincibilityTicker = 0;
+    this.teleports = 0;
     this.lives = lives;
     this.shipFragments = [];
     this.bullets = [];
+    this.shockwaves = [];
     this.x = x;
     this.y = y;
     this.vel = { x: 0, y: 0 };
@@ -21,14 +28,14 @@ class Ship {
     this.color = color;
     this.distanceFromCenter = 18;
     this.freshlySpawned = true;
-    this.freshlySpawnedDuration = 300;
+    this.freshlySpawnedDuration = 150;
     this.freshlySpawnedTicker = 0;
   }
 
   //Instantiate fragments method
   instantiateFragments() {
     for (let i = 0; i < 50; i++) {
-      let radius = Math.random() * 1 + 2;
+      let radius = 2.5;
       this.shipFragments.push(
         new ShipFragment(
           radius,
@@ -46,6 +53,11 @@ class Ship {
 
   //Ship rotate method
   rotate(dir) {
+    if (this.invincible) {
+      this.angularVel = 4;
+    } else {
+      this.angularVel = 2;
+    }
     if (this.radians <= Math.PI * 2) {
       this.angle += this.angularVel * dir;
     } else {
@@ -55,9 +67,18 @@ class Ship {
 
   //Ship shoot method
   shoot() {
-    const bulletSpeed = 10;
-    const bulletRadius = 2;
-    const maxBullets = 3;
+    let bulletSpeed;
+    let bulletRadius = 2;
+    let maxBullets;
+
+    if (this.invincible) {
+      bulletSpeed = 20;
+      maxBullets = 20;
+    } else {
+      bulletSpeed = 10;
+      maxBullets = 3;
+    }
+
     const bsTracker = this.bullets.length;
     if (!isPaused) {
       this.bullets.push(
@@ -66,9 +87,6 @@ class Ship {
     }
     if (this.bullets.length > maxBullets) {
       this.bullets.splice(maxBullets, this.bullets.length);
-    }
-    if (this.freshlySpawned === true) {
-      this.freshlySpawned = false;
     }
     if (
       this.bullets.length - bsTracker > 0 &&
@@ -79,6 +97,28 @@ class Ship {
       bs.volume = 0.2;
       bs.play();
     }
+  }
+
+  //Shockwave blast method
+  shockwaveBlast() {
+    let shockwaveSpeed;
+
+    if (this.invincible) {
+      shockwaveSpeed = 10;
+    } else {
+      shockwaveSpeed = 5;
+    }
+    this.shockwaves.push(
+      new Shockwave(
+        this.radius + this.distanceFromCenter + 6,
+        "#FF7F66",
+        shockwaveSpeed,
+        this
+      )
+    );
+    let sw = shockwave.cloneNode();
+    sw.volume = 0.2;
+    sw.play();
   }
 
   //Ship explode method
@@ -104,8 +144,9 @@ class Ship {
     s.play();
   }
 
-  //Ship nose draw method
+  //Ship draw method
   draw() {
+    //Draw and update ship nose
     c.beginPath();
     c.arc(this.x1, this.y1, this.radius, 0, Math.PI * 2, false);
     c.fillStyle = this.color;
@@ -125,23 +166,31 @@ class Ship {
     c.closePath();
     c.restore();
 
-    // //Relay parameter changes and draw ship aim direction line
-    // if (keys[32]) {
-    //   c.save();
-    //   c.beginPath();
-    //   c.strokeStyle = this.color;
-    //   c.shadowColor = this.color;
-    //   c.shadowBlur = 2;
-    //   c.lineWidth = 0.5;
-    //   c.moveTo(this.x1, this.y1);
-    //   c.lineTo(
-    //     this.x1 - 1000 * Math.cos(this.radians),
-    //     this.y1 - 1000 * Math.sin(this.radians)
-    //   );
-    //   c.stroke();
-    //   c.closePath();
-    //   c.restore();
-    // }
+    //Draw and update invincibility ring
+    if (this.invincible) {
+      c.save();
+      c.globalAlpha = 0.1;
+      c.beginPath();
+      c.arc(
+        this.x,
+        this.y,
+        this.radius + this.distanceFromCenter + 6,
+        0,
+        Math.PI * 2,
+        false
+      );
+      c.fillStyle = this.color;
+      c.fill();
+      c.restore();
+      c.save();
+      c.strokeStyle = this.color;
+      c.shadowColor = this.color;
+      c.shadowBlur = 3.5;
+      c.lineWidth = 4;
+      c.stroke();
+      c.closePath();
+      c.restore();
+    }
   }
 
   //Ship nose update method
@@ -150,6 +199,11 @@ class Ship {
     this.radians = this.angle * (Math.PI / 180);
 
     //Move ship forward or backward on keypress
+    if (this.invincible) {
+      this.velocityFactor = 0.15;
+    } else {
+      this.velocityFactor = 0.09;
+    }
     if (this.movingForward) {
       this.vel.x += Math.cos(this.radians) * this.velocityFactor;
       this.vel.y += Math.sin(this.radians) * this.velocityFactor;
@@ -283,6 +337,39 @@ class Bullet {
   }
 }
 
+//Shockwave class
+class Shockwave {
+  constructor(radius, color, vel, ship) {
+    this.ship = ship;
+    this.visible = true;
+    this.x = this.ship.x;
+    this.y = this.ship.y;
+    this.radius = radius;
+    this.color = color;
+    this.vel = vel;
+  }
+
+  //Shockwave draw method
+  draw() {
+    c.save();
+    c.beginPath();
+    c.arc(this.ship.x, this.ship.y, this.radius, 0, Math.PI * 2, false);
+    c.strokeStyle = this.color;
+    c.lineWidth = 5;
+    c.stroke();
+    c.closePath();
+    c.restore();
+  }
+
+  //Shockwave update method
+  update() {
+    //Move shockwave
+    this.radius += this.vel;
+
+    this.draw();
+  }
+}
+
 //Asteroid class
 class Asteroid {
   constructor(x, y, radius, color) {
@@ -295,8 +382,8 @@ class Asteroid {
       y: (Math.random() - 0.5) * 2.5,
     };
     this.mass = 1;
-    this.explosionBitSize = 0.8;
-    this.explosionBitNumber = 8;
+    this.explosionBitSize = 0.4;
+    this.explosionBitNumber = 4;
     this.opacity = 0.1;
   }
 
@@ -318,6 +405,7 @@ class Asteroid {
     ae.play();
   }
 
+  //Asteroid draw method
   draw() {
     c.beginPath();
     c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
@@ -331,6 +419,7 @@ class Asteroid {
     c.closePath();
   }
 
+  //Asteroid update method
   update() {
     this.draw();
 
@@ -371,12 +460,17 @@ class Asteroid {
       this.y = -this.radius;
     }
 
-    this.x += this.vel.x;
-    this.y += this.vel.y;
+    if (ships[0].invincible) {
+      this.x += this.vel.x / 5;
+      this.y += this.vel.y / 5;
+    } else {
+      this.x += this.vel.x;
+      this.y += this.vel.y;
+    }
   }
 }
 
-//ExplosionBit class
+//Explosion bit class
 class ExplosionBit {
   constructor(x, y, radius, color) {
     this.x = x;
@@ -391,6 +485,7 @@ class ExplosionBit {
     this.opacity = 1;
   }
 
+  //Explosion bit draw method
   draw() {
     c.save();
     c.beginPath();
@@ -402,6 +497,7 @@ class ExplosionBit {
     c.restore();
   }
 
+  //Explosion bit update method
   update() {
     //Move explosion bit
     this.y += this.vel.y;
@@ -411,6 +507,124 @@ class ExplosionBit {
     this.ttl -= 1;
     if (this.opacity > 0) {
       this.opacity -= 1 / this.ttl;
+      this.opacity = Math.max(0, this.opacity);
+    }
+
+    this.draw();
+  }
+}
+
+//Power-up class
+class PowerUp {
+  constructor(x, y, radius, color) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = color;
+    this.vel = {
+      x: (Math.random() - 0.5) * 2.5,
+      y: (Math.random() - 0.5) * 2.5,
+    };
+    this.powerUpAuraNumber = 8;
+    this.opacity = 0.1;
+  }
+
+  //Power-up disappear method
+  disappear() {
+    for (let i = 0; i < 1; i++) {
+      powerUpAuras.push(
+        new PowerUpAura(this.x, this.y, this.radius, this.color)
+      );
+    }
+    score += 2;
+    let pu = powerUp.cloneNode();
+    pu.volume = 0.1;
+    pu.play();
+  }
+
+  //Power-up draw method
+  draw() {
+    c.beginPath();
+    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    c.save();
+    c.globalAlpha = this.opacity;
+    c.fillStyle = this.color;
+    c.shadowColor = this.color;
+    c.shadowBlur = 7;
+    c.fill();
+    c.restore();
+    c.closePath();
+    c.fillStyle = textColor;
+    c.font = `${this.radius * 2}px Candara`;
+    c.fillText(`?`, this.x - this.radius / 3, this.y + (3 * this.radius) / 5);
+  }
+
+  //Power-up update method
+  update() {
+    this.draw();
+
+    //Behaviour of asteroid relative to proximity of ship
+    if (
+      distance(ships[0].x, ships[0].y, this.x, this.y) < 600 &&
+      this.opacity < 1
+    ) {
+      this.opacity += 0.02;
+    } else if (this.opacity > 0.1) {
+      this.opacity -= 0.02;
+      this.opacity = Math.max(0, this.opacity);
+    }
+
+    //Handle asteroid movement through screen borders
+    if (this.x + this.radius < 0) {
+      this.x = canvas.width + this.radius;
+    }
+    if (this.x - this.radius > canvas.width) {
+      this.x = -this.radius;
+    }
+    if (this.y + this.radius < 0) {
+      this.y = canvas.height + this.radius;
+    }
+    if (this.y - this.radius > canvas.height) {
+      this.y = -this.radius;
+    }
+
+    this.x += this.vel.x;
+    this.y += this.vel.y;
+  }
+}
+
+//Power-up aura class
+class PowerUpAura {
+  constructor(x, y, radius, color) {
+    this.x = x;
+    this.y = y;
+    this.radius = radius;
+    this.color = color;
+    this.ttl = 150;
+    this.opacity = 1;
+  }
+
+  //Power-up aura draw method
+  draw() {
+    c.save();
+    c.beginPath();
+    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    c.globalAlpha = this.opacity;
+    c.fillStyle = this.color;
+    c.shadowColor = this.color;
+    c.shadowBlur = 7;
+    c.fill();
+    c.closePath();
+    c.restore();
+  }
+
+  //Power-up aura update method
+  update() {
+    //Countdown for power-up aura removal create aura effect
+    this.radius += 0.2;
+    this.ttl -= 1;
+    if (this.opacity > 0) {
+      this.opacity -= 4 / this.ttl;
       this.opacity = Math.max(0, this.opacity);
     }
 
