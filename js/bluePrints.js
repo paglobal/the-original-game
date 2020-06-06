@@ -28,7 +28,7 @@ class Ship {
     this.color = color;
     this.distanceFromCenter = 18;
     this.freshlySpawned = true;
-    this.freshlySpawnedDuration = 150;
+    this.freshlySpawnedDuration = 200;
     this.freshlySpawnedTicker = 0;
   }
 
@@ -54,7 +54,7 @@ class Ship {
   //Ship rotate method
   rotate(dir) {
     if (this.invincible) {
-      this.angularVel = 4;
+      this.angularVel = 2.5;
     } else {
       this.angularVel = 2;
     }
@@ -73,7 +73,7 @@ class Ship {
 
     if (this.invincible) {
       bulletSpeed = 20;
-      maxBullets = 20;
+      maxBullets = 25;
     } else {
       bulletSpeed = 10;
       maxBullets = 3;
@@ -200,7 +200,7 @@ class Ship {
 
     //Move ship forward or backward on keypress
     if (this.invincible) {
-      this.velocityFactor = 0.15;
+      this.velocityFactor = 0.11;
     } else {
       this.velocityFactor = 0.09;
     }
