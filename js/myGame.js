@@ -57,7 +57,7 @@ function initiate() {
   moreColors = ["#20A4F3", "#BFDBF7", "#66D7D1", "#0075F2", "#096B72"];
 
   //Object instantiation
-  //Ship nose instantiation
+  //Ship instantiation
   ships.push(new Ship(canvas.width / 2, canvas.height / 2, 3, "white", 7));
 
   //Ship fragments instantiation
@@ -571,7 +571,7 @@ function letTheMagicBegin() {
           0
         ) {
           ships[0].invincible = true;
-          ships[0].freshlySpawnedTicker = 0;
+          ships[0].invincibilityTicker = 0;
           invincibilityPowerUps[i].disappear();
           invincibilityPowerUps.splice(i, 1);
         }
@@ -731,7 +731,6 @@ function letTheMagicBegin() {
   //Handle reset
   if (keys[82]) {
     if (!isPaused) {
-      freshlySpawned = true;
       ships[0].visible = true;
       score = 0;
       ships[0].lives = 7;

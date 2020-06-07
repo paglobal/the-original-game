@@ -27,7 +27,7 @@ class Ship {
     this.radius = radius;
     this.color = color;
     this.distanceFromCenter = 18;
-    this.freshlySpawned = true;
+    this.freshlySpawned = false;
     this.freshlySpawnedDuration = 200;
     this.freshlySpawnedTicker = 0;
   }
@@ -167,7 +167,7 @@ class Ship {
     c.restore();
 
     //Draw and update invincibility ring
-    if (this.invincible) {
+    if (this.invincible || this.freshlySpawned) {
       c.save();
       c.globalAlpha = 0.1;
       c.beginPath();
@@ -182,14 +182,16 @@ class Ship {
       c.fillStyle = this.color;
       c.fill();
       c.restore();
-      c.save();
-      c.strokeStyle = this.color;
-      c.shadowColor = this.color;
-      c.shadowBlur = 3.5;
-      c.lineWidth = 4;
-      c.stroke();
-      c.closePath();
-      c.restore();
+      if (this.invincible) {
+        c.save();
+        c.strokeStyle = this.color;
+        c.shadowColor = this.color;
+        c.shadowBlur = 3.5;
+        c.lineWidth = 4;
+        c.stroke();
+        c.closePath();
+        c.restore();
+      }
     }
   }
 
