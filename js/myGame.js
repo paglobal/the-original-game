@@ -26,17 +26,26 @@ let darkTheme = true;
 //Audio
 window.onload = function () {
   let firstTheme = document.querySelector("#firstTheme");
+  firstTheme.load();
   firstTheme.volume = 0.4;
   let secondTheme = document.querySelector("#secondTheme");
+  secondTheme.load();
   secondTheme.volume = 0.4;
   let thirdTheme = document.querySelector("#thirdTheme");
+  thirdTheme.load();
   thirdTheme.volume = 0.4;
   let bulletShot = document.querySelector("#bulletShot");
+  bulletShot.load();
   let powerUp = document.querySelector("#powerUp");
+  powerUp.load();
   let spawned = document.querySelector("#spawned");
+  spawned.load();
   let teleport = document.querySelector("#teleport");
+  teleport.load();
   let asteroidExplode = document.querySelector("#asteroidExplode");
+  asteroidExplode.load();
   let shockwave = document.querySelector("#shockwave");
+  shockwave.load();
 };
 
 //Game initiate
