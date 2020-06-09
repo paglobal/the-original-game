@@ -62,8 +62,10 @@ function initiate() {
   //Clone
   ships.push(
     new Ship(
-      ships[0].x,
-      ships[0].y + 3.5 * ships[0].distanceFromCenter,
+      ships[0].x +
+        Math.cos(ships[0].radians) * 3.5 * ships[0].distanceFromCenter,
+      ships[0].y +
+        Math.sin(ships[0].radians) * 3.5 * ships[0].distanceFromCenter,
       3,
       "#FF7F66",
       7
@@ -194,7 +196,7 @@ function initiate() {
   }
 
   //Spawn shockwave power-up timeout
-  window.setInterval(spawnShockwavePowerUp, 45000);
+  window.setInterval(spawnShockwavePowerUp, 25000);
 
   function spawnShockwavePowerUp() {
     if (!isPaused) {
@@ -210,7 +212,7 @@ function initiate() {
   }
 
   //Spawn clone power-up timeout
-  window.setInterval(spawnClonePowerUp, 200000);
+  window.setInterval(spawnClonePowerUp, 80000);
 
   function spawnClonePowerUp() {
     if (!isPaused) {
@@ -226,7 +228,7 @@ function initiate() {
   }
 
   //Spawn teleportation power-up timeout
-  window.setInterval(spawnTeleportationPowerUp, 30000);
+  window.setInterval(spawnTeleportationPowerUp, 20000);
 
   function spawnTeleportationPowerUp() {
     if (!isPaused) {
@@ -242,7 +244,7 @@ function initiate() {
   }
 
   //Spawn invincibility power-up timeout
-  window.setInterval(spawnInvincibilityPowerUp, 210000);
+  window.setInterval(spawnInvincibilityPowerUp, 60000);
 
   function spawnInvincibilityPowerUp() {
     if (!isPaused) {
@@ -339,11 +341,15 @@ function letTheMagicBegin() {
   //Update clone
   if (!isPaused && ships[1].visible) {
     //Update clone linear displacement
-    ships[1].x = ships[0].x;
-    ships[1].y = ships[0].y + 3.5 * ships[0].distanceFromCenter;
+    ships[1].x =
+      ships[0].x +
+      Math.cos(ships[0].radians) * 3.5 * ships[0].distanceFromCenter;
+    ships[1].y =
+      ships[0].y +
+      Math.sin(ships[0].radians) * 3.5 * ships[0].distanceFromCenter;
 
     //Update clone angular displacement
-    ships[1].rotate(-1);
+    ships[1].angle = ships[0].angle + 180;
   }
 
   //Relay parameter changes and draw ship
@@ -594,7 +600,7 @@ function letTheMagicBegin() {
                 0 &&
               !ships[0].freshlySpawned
             ) {
-              if (asteroids[i].radius > 12) {
+              if (asteroids[i].radius > 15) {
                 asteroids[i].radius -= 9;
                 asteroids[i].explode();
                 asteroids.push(
@@ -648,7 +654,7 @@ function letTheMagicBegin() {
                 0 &&
               !ships[1].freshlySpawned
             ) {
-              if (asteroids[i].radius > 12) {
+              if (asteroids[i].radius > 15) {
                 asteroids[i].radius -= 9;
                 asteroids[i].explode();
                 asteroids.push(
@@ -762,8 +768,12 @@ function letTheMagicBegin() {
                 (ships[0].distanceFromCenter + ships[1].distanceFromCenter) >
               0
             ) {
-              ships[1].x = ships[0].x;
-              ships[1].y = ships[0].y + 3.5 * ships[0].distanceFromCenter;
+              ships[1].x =
+                ships[0].x +
+                Math.cos(ships[0].radians) * 3.5 * ships[0].distanceFromCenter;
+              ships[1].y =
+                ships[0].y +
+                Math.sin(ships[0].radians) * 3.5 * ships[0].distanceFromCenter;
             }
             if (!ships[1].visible) {
               let s = spawned.cloneNode();
@@ -848,7 +858,7 @@ function letTheMagicBegin() {
               (asteroids[i].radius + ships[0].bullets[j].radius) <
             0
           ) {
-            if (asteroids[i].radius > 12) {
+            if (asteroids[i].radius > 15) {
               asteroids[i].radius -= 9;
               asteroids[i].explode();
               asteroids.push(
@@ -894,7 +904,7 @@ function letTheMagicBegin() {
               (asteroids[i].radius + ships[1].bullets[j].radius) <
             0
           ) {
-            if (asteroids[i].radius > 12) {
+            if (asteroids[i].radius > 15) {
               asteroids[i].radius -= 9;
               asteroids[i].explode();
               asteroids.push(
