@@ -36,7 +36,6 @@ window.onload = function () {
   let spawned = document.querySelector("#spawned");
   let teleport = document.querySelector("#teleport");
   let asteroidExplode = document.querySelector("#asteroidExplode");
-  let alphaShot = document.querySelector("#alphaShot");
   let shockwave = document.querySelector("#shockwave");
 };
 
@@ -58,20 +57,34 @@ function initiate() {
 
   //Object instantiation
   //Ship instantiation
+  //Player ship
   ships.push(new Ship(canvas.width / 2, canvas.height / 2, 3, "white", 7));
+  //Clone
+  ships.push(
+    new Ship(
+      ships[0].x,
+      ships[0].y + 3.5 * ships[0].distanceFromCenter,
+      3,
+      "#FF7F66",
+      7
+    )
+  );
+  ships[1].visible = false;
+  ships[1].invincible = true;
+  ships[1].borders = false;
 
   //Ship fragments instantiation
   ships.forEach((ship) => {
     ship.instantiateFragments();
   });
 
-  //Asteroids instantiation
+  // //Asteroids instantiation
   // for (let i = 0; i < 10; i++) {
   //   const radius =
   //     Math.floor(Math.random() * 3 + 1) * randomIntFromRange(5, 17);
   //   let x = randomIntFromRange(radius, canvas.width - radius);
   //   let y = randomIntFromRange(radius, canvas.height - radius);
-  //   const color = randomElement(asteroidColors);
+  //   const color = "white"
 
   //   if (i !== 0) {
   //     for (let j = 0; j < asteroids.length; j++) {
@@ -121,7 +134,17 @@ function initiate() {
     if (e.keyCode === 40) {
       e.preventDefault();
     }
+    if (
+      e.keyCode === 17 &&
+      !isPaused &&
+      ships[0].lives !== 0 &&
+      ships[0].teleports !== 0
+    ) {
+      ships[0].teleport();
+      ships[0].teleports--;
+    }
   });
+
   addEventListener("keyup", function (e) {
     keys[e.keyCode] = false;
   });
@@ -171,7 +194,7 @@ function initiate() {
   }
 
   //Spawn shockwave power-up timeout
-  window.setInterval(spawnShockwavePowerUp, 30000);
+  window.setInterval(spawnShockwavePowerUp, 45000);
 
   function spawnShockwavePowerUp() {
     if (!isPaused) {
@@ -186,42 +209,40 @@ function initiate() {
     }
   }
 
-  // //Spawn clone power-up timeout
-  // window.setInterval(spawnClonePowerUp, 44000);
+  //Spawn clone power-up timeout
+  window.setInterval(spawnClonePowerUp, 200000);
 
-  // function spawnClonePowerUp() {
-  //   if (!isPaused) {
-  //     if (clonePowerUps.length < 1) {
-  //       const radius =
-  //        randomIntFromRange(20, 25);
-  //       let x = randomIntFromRange(canvas.width, canvas.width + 4 * radius);
-  //       let y = randomIntFromRange(canvas.height, canvas.height + 4 * radius);
-  //       const color = randomElement(moreColors);
+  function spawnClonePowerUp() {
+    if (!isPaused) {
+      if (clonePowerUps.length < 1) {
+        const radius = randomIntFromRange(20, 25);
+        let x = randomIntFromRange(canvas.width, canvas.width + 4 * radius);
+        let y = randomIntFromRange(canvas.height, canvas.height + 4 * radius);
+        const color = randomElement(moreColors);
 
-  //       clonePowerUps.push(new PowerUp(x, y, radius, color));
-  //     }
-  //   }
-  // }
+        clonePowerUps.push(new PowerUp(x, y, radius, color));
+      }
+    }
+  }
 
-  // //Spawn teleportation power-up timeout
-  // window.setInterval(spawnTeleportationPowerUp, 36000);
+  //Spawn teleportation power-up timeout
+  window.setInterval(spawnTeleportationPowerUp, 30000);
 
-  // function spawnTeleportationPowerUp() {
-  //   if (!isPaused) {
-  //     if (teleportationPowerUps.length < 1) {
-  //       const radius =
-  //        randomIntFromRange(20, 25);
-  //       let x = randomIntFromRange(canvas.width, canvas.width + 4 * radius);
-  //       let y = randomIntFromRange(canvas.height, canvas.height + 4 * radius);
-  //       const color = randomElement(moreColors);
+  function spawnTeleportationPowerUp() {
+    if (!isPaused) {
+      if (teleportationPowerUps.length < 1) {
+        const radius = randomIntFromRange(20, 25);
+        let x = randomIntFromRange(canvas.width, canvas.width + 4 * radius);
+        let y = randomIntFromRange(canvas.height, canvas.height + 4 * radius);
+        const color = randomElement(moreColors);
 
-  //       teleportationPowerUps.push(new PowerUp(x, y, radius, color));
-  //     }
-  //   }
-  // }
+        teleportationPowerUps.push(new PowerUp(x, y, radius, color));
+      }
+    }
+  }
 
   //Spawn invincibility power-up timeout
-  window.setInterval(spawnInvincibilityPowerUp, 60000);
+  window.setInterval(spawnInvincibilityPowerUp, 210000);
 
   function spawnInvincibilityPowerUp() {
     if (!isPaused) {
@@ -297,13 +318,13 @@ function letTheMagicBegin() {
   // c.fillStyle = "rgba(255, 255, 255, 0.08)";
   c.fillRect(0, 0, canvas.width, canvas.height);
 
-  //Update ship
-  //Update ship linear displacement
-  if (!isPaused) {
+  //Update ship 1
+  if (!isPaused && ships[0].visible) {
+    //Update ship 1 linear displacement
     ships[0].movingForward = keys[38];
     ships[0].movingBackward = keys[40];
 
-    //Update ship angular displacement
+    //Update ship 1 angular displacement
     if (keys[39]) {
       ships[0].rotate(1);
       ships[0].shipFragments.forEach((shipFragment) => {
@@ -315,7 +336,18 @@ function letTheMagicBegin() {
     }
   }
 
-  //Relay parameter changes and draw ship nose
+  //Update clone
+  if (!isPaused && ships[1].visible) {
+    //Update clone linear displacement
+    ships[1].x = ships[0].x;
+    ships[1].y = ships[0].y + 3.5 * ships[0].distanceFromCenter;
+
+    //Update clone angular displacement
+    ships[1].rotate(-1);
+  }
+
+  //Relay parameter changes and draw ship
+  //Ship 1
   if (ships[0].visible) {
     if (!isPaused) {
       ships[0].update();
@@ -324,7 +356,17 @@ function letTheMagicBegin() {
     }
   }
 
+  //Clone
+  if (ships[1].visible) {
+    if (!isPaused) {
+      ships[1].update();
+    } else {
+      ships[1].draw();
+    }
+  }
+
   //Relay parameter changes and draw ship fragments
+  //Ship 1
   ships[0].shipFragments.forEach((shipFragment) => {
     if (ships[0].visible) {
       if (!isPaused) {
@@ -348,7 +390,32 @@ function letTheMagicBegin() {
     }
   });
 
+  //Clone
+  ships[1].shipFragments.forEach((shipFragment) => {
+    if (ships[1].visible) {
+      if (!isPaused) {
+        shipFragment.update();
+      } else {
+        if (!justStarted) {
+          //Move points over time
+          shipFragment.staticRadians += shipFragment.staticAngularVel;
+          //Circular motion
+          shipFragment.x1 =
+            ships[1].x +
+            Math.sin(shipFragment.staticRadians) *
+              shipFragment.distanceFromCenter;
+          shipFragment.y1 =
+            ships[1].y +
+            Math.cos(shipFragment.staticRadians) *
+              shipFragment.distanceFromCenter;
+        }
+        shipFragment.draw();
+      }
+    }
+  });
+
   //Draw and update bullets
+  //Ship 1
   if (ships[0].visible) {
     if (ships[0].bullets.length !== 0) {
       ships[0].bullets.forEach((bullet, index) => {
@@ -370,12 +437,52 @@ function letTheMagicBegin() {
     }
   }
 
+  //Clone
+  if (ships[1].visible) {
+    if (ships[1].bullets.length !== 0) {
+      ships[1].bullets.forEach((bullet, index) => {
+        if (
+          bullet.x < 0 ||
+          bullet.x > canvas.width ||
+          bullet.y < 0 ||
+          bullet.y > canvas.height
+        ) {
+          ships[1].bullets.splice(index, 1);
+        } else {
+          if (!isPaused) {
+            bullet.update();
+          } else {
+            bullet.draw();
+          }
+        }
+      });
+    }
+  }
+
   //Draw and update shockwaves
+  //Ship 1
   if (ships[0].visible) {
     if (ships[0].shockwaves.length !== 0) {
       ships[0].shockwaves.forEach((shockwave, index) => {
-        if (shockwave.radius >= 420) {
+        if (shockwave.radius >= shockwave.maxBlastRadius) {
           ships[0].shockwaves.splice(index, 1);
+        } else {
+          if (!isPaused) {
+            shockwave.update();
+          } else {
+            shockwave.draw();
+          }
+        }
+      });
+    }
+  }
+
+  //Clone
+  if (ships[1].visible) {
+    if (ships[1].shockwaves.length !== 0) {
+      ships[1].shockwaves.forEach((shockwave, index) => {
+        if (shockwave.radius >= shockwave.maxBlastRadius) {
+          ships[1].shockwaves.splice(index, 1);
         } else {
           if (!isPaused) {
             shockwave.update();
@@ -472,41 +579,108 @@ function letTheMagicBegin() {
 
   //Handle collision detection and life subtraction
   //Ship and asteroid collision detection
-  if (!isPaused) {
-    if (asteroids.length !== 0) {
-      for (let i = 0; i < asteroids.length; i++) {
-        if (
-          distance(ships[0].x, ships[0].y, asteroids[i].x, asteroids[i].y) -
-            (ships[0].distanceFromCenter + asteroids[i].radius) <
-            0 &&
-          !ships[0].freshlySpawned
-        ) {
+  //Ship 1
+  if (ships[0].visible) {
+    if (!isPaused) {
+      if (asteroids.length !== 0) {
+        for (let i = 0; i < asteroids.length; i++) {
           if (ships[0].invincible) {
-            if (asteroids[i].radius > 12) {
-              asteroids[i].radius -= 9;
-              asteroids[i].explode();
-              asteroids.push(
-                new Asteroid(
-                  asteroids[i].x,
-                  asteroids[i].y,
-                  asteroids[i].radius,
-                  asteroids[i].color
-                )
-              );
-              asteroids.push(
-                new Asteroid(
-                  asteroids[i].x,
-                  asteroids[i].y,
-                  asteroids[i].radius,
-                  asteroids[i].color
-                )
-              );
-            } else {
-              asteroids[i].explode();
+            if (
+              distance(ships[0].x, ships[0].y, asteroids[i].x, asteroids[i].y) -
+                (ships[0].distanceFromCenter +
+                  ships[0].radius +
+                  6 +
+                  asteroids[i].radius) <
+                0 &&
+              !ships[0].freshlySpawned
+            ) {
+              if (asteroids[i].radius > 12) {
+                asteroids[i].radius -= 9;
+                asteroids[i].explode();
+                asteroids.push(
+                  new Asteroid(
+                    asteroids[i].x,
+                    asteroids[i].y,
+                    asteroids[i].radius,
+                    asteroids[i].color
+                  )
+                );
+                asteroids.push(
+                  new Asteroid(
+                    asteroids[i].x,
+                    asteroids[i].y,
+                    asteroids[i].radius,
+                    asteroids[i].color
+                  )
+                );
+              } else {
+                asteroids[i].explode();
+              }
+              asteroids.splice(i, 1);
             }
-            asteroids.splice(i, 1);
           } else {
-            ships[0].explode();
+            if (
+              distance(ships[0].x, ships[0].y, asteroids[i].x, asteroids[i].y) -
+                (ships[0].distanceFromCenter + 2.5 + asteroids[i].radius) <
+                0 &&
+              !ships[0].freshlySpawned
+            ) {
+              ships[0].explode();
+            }
+          }
+        }
+      }
+    }
+  }
+
+  //Clone
+  if (ships[1].visible) {
+    if (!isPaused) {
+      if (asteroids.length !== 0) {
+        for (let i = 0; i < asteroids.length; i++) {
+          if (ships[1].invincible) {
+            if (
+              distance(ships[1].x, ships[1].y, asteroids[i].x, asteroids[i].y) -
+                (ships[1].distanceFromCenter +
+                  ships[1].radius +
+                  6 +
+                  asteroids[i].radius) <
+                0 &&
+              !ships[1].freshlySpawned
+            ) {
+              if (asteroids[i].radius > 12) {
+                asteroids[i].radius -= 9;
+                asteroids[i].explode();
+                asteroids.push(
+                  new Asteroid(
+                    asteroids[i].x,
+                    asteroids[i].y,
+                    asteroids[i].radius,
+                    asteroids[i].color
+                  )
+                );
+                asteroids.push(
+                  new Asteroid(
+                    asteroids[i].x,
+                    asteroids[i].y,
+                    asteroids[i].radius,
+                    asteroids[i].color
+                  )
+                );
+              } else {
+                asteroids[i].explode();
+              }
+              asteroids.splice(i, 1);
+            }
+          } else {
+            if (
+              distance(ships[1].x, ships[1].y, asteroids[i].x, asteroids[i].y) -
+                (ships[1].distanceFromCenter + 2.5 + asteroids[i].radius) <
+                0 &&
+              !ships[1].freshlySpawned
+            ) {
+              ships[1].explode();
+            }
           }
         }
       }
@@ -514,27 +688,60 @@ function letTheMagicBegin() {
   }
 
   //Ship and shockwave power-up collision detection
-  if (!isPaused) {
-    if (shockwavePowerUps.length !== 0) {
-      for (let i = 0; i < shockwavePowerUps.length; i++) {
-        if (
-          distance(
-            ships[0].x,
-            ships[0].y,
-            shockwavePowerUps[i].x,
-            shockwavePowerUps[i].y
-          ) -
-            (ships[0].distanceFromCenter + shockwavePowerUps[i].radius) <
-          0
-        ) {
-          ships[0].shockwaveBlast();
-          shockwavePowerUps[i].disappear();
-          shockwavePowerUps.splice(i, 1);
+  //Ship 1
+  if (ships[0].visible) {
+    if (!isPaused) {
+      if (shockwavePowerUps.length !== 0) {
+        for (let i = 0; i < shockwavePowerUps.length; i++) {
+          if (
+            distance(
+              ships[0].x,
+              ships[0].y,
+              shockwavePowerUps[i].x,
+              shockwavePowerUps[i].y
+            ) -
+              (ships[0].distanceFromCenter +
+                2.5 +
+                shockwavePowerUps[i].radius) <
+            0
+          ) {
+            ships[0].shockwaveBlast(450);
+            shockwavePowerUps[i].disappear();
+            shockwavePowerUps.splice(i, 1);
+          }
         }
       }
     }
+  }
 
-    //Ship and clone power-up collision detection
+  //Clone
+  if (ships[1].visible) {
+    if (!isPaused) {
+      if (shockwavePowerUps.length !== 0) {
+        for (let i = 0; i < shockwavePowerUps.length; i++) {
+          if (
+            distance(
+              ships[1].x,
+              ships[1].y,
+              shockwavePowerUps[i].x,
+              shockwavePowerUps[i].y
+            ) -
+              (ships[1].distanceFromCenter +
+                2.5 +
+                shockwavePowerUps[i].radius) <
+            1
+          ) {
+            ships[1].shockwaveBlast(450);
+            shockwavePowerUps[i].disappear();
+            shockwavePowerUps.splice(i, 1);
+          }
+        }
+      }
+    }
+  }
+
+  //Ship and clone power-up collision detection
+  if (ships[0].visible) {
     if (!isPaused) {
       if (clonePowerUps.length !== 0) {
         for (let i = 0; i < clonePowerUps.length; i++) {
@@ -545,9 +752,25 @@ function letTheMagicBegin() {
               clonePowerUps[i].x,
               clonePowerUps[i].y
             ) -
-              (ships[0].distanceFromCenter + clonePowerUps[i].radius) <
+              (ships[0].distanceFromCenter + 2.5 + clonePowerUps[i].radius) <
             0
           ) {
+            ships[1].visible = true;
+            ships[1].visibilityTicker = 0;
+            if (
+              distance(ships[0].x, ships[0].y, ships[1].x, ships[1].y) -
+                (ships[0].distanceFromCenter + ships[1].distanceFromCenter) >
+              0
+            ) {
+              ships[1].x = ships[0].x;
+              ships[1].y = ships[0].y + 3.5 * ships[0].distanceFromCenter;
+            }
+            if (!ships[1].visible) {
+              let s = spawned.cloneNode();
+              s.volume = 0.2;
+              s.play();
+            }
+            ships[1].shockwaveBlast(200);
             clonePowerUps[i].disappear();
             clonePowerUps.splice(i, 1);
           }
@@ -557,50 +780,60 @@ function letTheMagicBegin() {
   }
 
   //Ship and invincibility power-up collision detection
-  if (!isPaused) {
-    if (invincibilityPowerUps.length !== 0) {
-      for (let i = 0; i < invincibilityPowerUps.length; i++) {
-        if (
-          distance(
-            ships[0].x,
-            ships[0].y,
-            invincibilityPowerUps[i].x,
-            invincibilityPowerUps[i].y
-          ) -
-            (ships[0].distanceFromCenter + invincibilityPowerUps[i].radius) <
-          0
-        ) {
-          ships[0].invincible = true;
-          ships[0].invincibilityTicker = 0;
-          invincibilityPowerUps[i].disappear();
-          invincibilityPowerUps.splice(i, 1);
+  if (ships[0].visible) {
+    if (!isPaused) {
+      if (invincibilityPowerUps.length !== 0) {
+        for (let i = 0; i < invincibilityPowerUps.length; i++) {
+          if (
+            distance(
+              ships[0].x,
+              ships[0].y,
+              invincibilityPowerUps[i].x,
+              invincibilityPowerUps[i].y
+            ) -
+              (ships[0].distanceFromCenter +
+                2.5 +
+                invincibilityPowerUps[i].radius) <
+            0
+          ) {
+            ships[0].invincible = true;
+            ships[0].invincibilityTicker = 0;
+            invincibilityPowerUps[i].disappear();
+            invincibilityPowerUps.splice(i, 1);
+          }
         }
       }
     }
   }
 
   //Ship and teleportation power-up collision detection
-  if (!isPaused) {
-    if (teleportationPowerUps.length !== 0) {
-      for (let i = 0; i < teleportationPowerUps.length; i++) {
-        if (
-          distance(
-            ships[0].x,
-            ships[0].y,
-            teleportationPowerUps[i].x,
-            teleportationPowerUps[i].y
-          ) -
-            (ships[0].distanceFromCenter + teleportationPowerUps[i].radius) <
-          0
-        ) {
-          teleportationPowerUps[i].disappear();
-          teleportationPowerUps.splice(i, 1);
+  if (ships[0].visible) {
+    if (!isPaused) {
+      if (teleportationPowerUps.length !== 0) {
+        for (let i = 0; i < teleportationPowerUps.length; i++) {
+          if (
+            distance(
+              ships[0].x,
+              ships[0].y,
+              teleportationPowerUps[i].x,
+              teleportationPowerUps[i].y
+            ) -
+              (ships[0].distanceFromCenter +
+                2.5 +
+                teleportationPowerUps[i].radius) <
+            0
+          ) {
+            ships[0].teleports++;
+            teleportationPowerUps[i].disappear();
+            teleportationPowerUps.splice(i, 1);
+          }
         }
       }
     }
   }
 
   //Bullet and asteroid collision detection
+  //Ship 1
   if (!isPaused) {
     if (asteroids.length !== 0 && ships[0].bullets.length !== 0) {
       loop1: for (let i = 0; i < asteroids.length; i++) {
@@ -646,7 +879,54 @@ function letTheMagicBegin() {
     }
   }
 
+  //Clone
+  if (!isPaused) {
+    if (asteroids.length !== 0 && ships[1].bullets.length !== 0) {
+      loop1: for (let i = 0; i < asteroids.length; i++) {
+        for (let j = 0; j < ships[1].bullets.length; j++) {
+          if (
+            distance(
+              asteroids[i].x,
+              asteroids[i].y,
+              ships[1].bullets[j].x,
+              ships[1].bullets[j].y
+            ) -
+              (asteroids[i].radius + ships[1].bullets[j].radius) <
+            0
+          ) {
+            if (asteroids[i].radius > 12) {
+              asteroids[i].radius -= 9;
+              asteroids[i].explode();
+              asteroids.push(
+                new Asteroid(
+                  asteroids[i].x,
+                  asteroids[i].y,
+                  asteroids[i].radius,
+                  asteroids[i].color
+                )
+              );
+              asteroids.push(
+                new Asteroid(
+                  asteroids[i].x,
+                  asteroids[i].y,
+                  asteroids[i].radius,
+                  asteroids[i].color
+                )
+              );
+            } else {
+              asteroids[i].explode();
+            }
+            asteroids.splice(i, 1);
+            ships[1].bullets.splice(j, 1);
+            break loop1;
+          }
+        }
+      }
+    }
+  }
+
   //Shockwave and asteroid collision detection
+  //Ship 1
   if (!isPaused) {
     if (asteroids.length !== 0 && ships[0].shockwaves.length !== 0) {
       loop1: for (let i = 0; i < asteroids.length; i++) {
@@ -691,11 +971,59 @@ function letTheMagicBegin() {
     }
   }
 
+  //Clone
+  if (!isPaused) {
+    if (asteroids.length !== 0 && ships[1].shockwaves.length !== 0) {
+      loop1: for (let i = 0; i < asteroids.length; i++) {
+        for (let j = 0; j < ships[1].shockwaves.length; j++) {
+          if (
+            distance(
+              asteroids[i].x,
+              asteroids[i].y,
+              ships[1].shockwaves[j].x,
+              ships[1].shockwaves[j].y
+            ) -
+              (asteroids[i].radius + ships[1].shockwaves[j].radius) <
+            0
+          ) {
+            if (asteroids[i].radius > 12) {
+              asteroids[i].radius -= 9;
+              asteroids[i].explode();
+              asteroids.push(
+                new Asteroid(
+                  asteroids[i].x,
+                  asteroids[i].y,
+                  asteroids[i].radius,
+                  asteroids[i].color
+                )
+              );
+              asteroids.push(
+                new Asteroid(
+                  asteroids[i].x,
+                  asteroids[i].y,
+                  asteroids[i].radius,
+                  asteroids[i].color
+                )
+              );
+            } else {
+              asteroids[i].explode();
+            }
+            asteroids.splice(i, 1);
+            break loop1;
+          }
+        }
+      }
+    }
+  }
+
   //Handle lives and score display, game over, reset, pause, play and freshlySpawned
   //Handle lives and game over
   if (ships[0].lives <= 0) {
     ships[0].visible = false;
     ships[0].bullets.splice(0, ships[0].bullets.length);
+    ships[1].visible = false;
+    ships[1].bullets.splice(0, ships[0].bullets.length);
+    ships[0].teleports = 0;
     asteroids.splice(0, asteroids.length);
     invincibilityPowerUps.splice(0, invincibilityPowerUps.length);
     clonePowerUps.splice(0, clonePowerUps.length);
@@ -727,6 +1055,52 @@ function letTheMagicBegin() {
   if (!isPaused && ships[0].visible && keys[32] && ships[0].invincible) {
     ships[0].shoot();
   }
+
+  //Handle clone
+  if (ships[1].visibilityTicker === ships[1].visibilityDuration) {
+    ships[1].visible = false;
+    ships[1].visibilityTicker = 0;
+  }
+
+  if (ships[1].visible === true) {
+    ships[1].visibilityTicker++;
+  }
+
+  if (ships[1].shotTicker === ships[1].shotDuration) {
+    ships[1].canShoot = false;
+    ships[1].shotTicker = 0;
+  }
+
+  if (ships[1].canShoot === true) {
+    ships[1].shotTicker++;
+  }
+
+  if (ships[1].nullShotTicker === ships[1].nullShotDuration) {
+    ships[1].canShoot = true;
+    ships[1].nullShotTicker = 0;
+  }
+
+  if (ships[1].canShoot === false) {
+    ships[1].nullShotTicker++;
+  }
+
+  if (
+    !isPaused &&
+    ships[1].visible &&
+    ships[1].invincible &&
+    ships[1].canShoot
+  ) {
+    ships[1].shoot();
+  }
+
+  //Handle teleportation info display
+  c.fillStyle = textColor;
+  c.font = `${0.03 * canvas.height}px Candara`;
+  c.fillText(
+    `TELEPORTS: ${ships[0].teleports.toString()}`,
+    0.015 * canvas.width,
+    0.07 * canvas.height
+  );
 
   //Handle reset
   if (keys[82]) {

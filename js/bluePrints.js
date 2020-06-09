@@ -2,11 +2,17 @@
 class Ship {
   constructor(x, y, radius, color, lives) {
     this.visible = true;
-    this.visibilityDuration = 2000;
+    this.borders = true;
+    this.visibilityDuration = 900;
     this.visibilityTicker = 0;
     this.invincible = false;
-    this.invincibilityDuration = 600;
+    this.invincibilityDuration = 900;
     this.invincibilityTicker = 0;
+    this.canShoot = true;
+    this.shotTicker = 0;
+    this.shotDuration = 85;
+    this.nullShotTicker = 0;
+    this.nullShotDuration = 50;
     this.teleports = 0;
     this.lives = lives;
     this.shipFragments = [];
@@ -81,26 +87,30 @@ class Ship {
 
     const bsTracker = this.bullets.length;
     if (!isPaused) {
-      this.bullets.push(
-        new Bullet(bulletRadius, randomElement(bulletColors), bulletSpeed, this)
-      );
-    }
-    if (this.bullets.length > maxBullets) {
-      this.bullets.splice(maxBullets, this.bullets.length);
-    }
-    if (
-      this.bullets.length - bsTracker > 0 &&
-      this.visible === true &&
-      isPaused === false
-    ) {
-      let bs = bulletShot.cloneNode();
-      bs.volume = 0.2;
-      bs.play();
+      if (this.bullets.length < maxBullets) {
+        this.bullets.push(
+          new Bullet(
+            bulletRadius,
+            randomElement(bulletColors),
+            bulletSpeed,
+            this
+          )
+        );
+      }
+      if (
+        this.bullets.length - bsTracker > 0 &&
+        this.visible === true &&
+        isPaused === false
+      ) {
+        let bs = bulletShot.cloneNode();
+        bs.volume = 0.2;
+        bs.play();
+      }
     }
   }
 
   //Shockwave blast method
-  shockwaveBlast() {
+  shockwaveBlast(maxBlastRadius) {
     let shockwaveSpeed;
 
     if (this.invincible) {
@@ -113,7 +123,8 @@ class Ship {
         this.radius + this.distanceFromCenter + 6,
         "#FF7F66",
         shockwaveSpeed,
-        this
+        this,
+        maxBlastRadius
       )
     );
     let sw = shockwave.cloneNode();
@@ -142,6 +153,44 @@ class Ship {
     let s = spawned.cloneNode();
     s.volume = 0.2;
     s.play();
+  }
+
+  //Ship teleport method
+  teleport() {
+    this.x = randomIntFromRange(
+      this.radius + this.distanceFromCenter,
+      canvas.width - (this.radius + this.distanceFromCenter)
+    );
+    this.y = randomIntFromRange(
+      this.radius + this.distanceFromCenter,
+      canvas.height - (this.radius + this.distanceFromCenter)
+    );
+
+    if (!this.invincible) {
+      for (let i = 0; i < asteroids.length; i++) {
+        if (
+          distance(ships[0].x, ships[0].y, asteroids[i].x, asteroids[i].y) -
+            (ships[0].distanceFromCenter +
+              ships[0].radius +
+              50 +
+              asteroids[i].radius) <
+          0
+        ) {
+          this.x = randomIntFromRange(
+            this.radius + this.distanceFromCenter,
+            canvas.width - (this.radius + this.distanceFromCenter)
+          );
+          this.y = randomIntFromRange(
+            this.radius + this.distanceFromCenter,
+            canvas.height - (this.radius + this.distanceFromCenter)
+          );
+          i = -1;
+        }
+      }
+    }
+    let t = teleport.cloneNode();
+    t.volume = 0.2;
+    t.play();
   }
 
   //Ship draw method
@@ -195,7 +244,7 @@ class Ship {
     }
   }
 
-  //Ship nose update method
+  //Ship update method
   update() {
     //Update ship angular displacement
     this.radians = this.angle * (Math.PI / 180);
@@ -217,17 +266,19 @@ class Ship {
     }
 
     //Handle ship movement through screen borders
-    if (this.x + (this.radius + this.distanceFromCenter) < 0) {
-      this.x = canvas.width + this.radius + this.distanceFromCenter;
-    }
-    if (this.x - (this.radius + this.distanceFromCenter) > canvas.width) {
-      this.x = -(this.radius + this.distanceFromCenter);
-    }
-    if (this.y + (this.radius + this.distanceFromCenter) < 0) {
-      this.y = canvas.height + this.radius + this.distanceFromCenter;
-    }
-    if (this.y - (this.radius + this.distanceFromCenter) > canvas.height) {
-      this.y = -(this.radius + this.distanceFromCenter);
+    if (this.borders === true) {
+      if (this.x + (this.radius + this.distanceFromCenter) < 0) {
+        this.x = canvas.width + this.radius + this.distanceFromCenter;
+      }
+      if (this.x - (this.radius + this.distanceFromCenter) > canvas.width) {
+        this.x = -(this.radius + this.distanceFromCenter);
+      }
+      if (this.y + (this.radius + this.distanceFromCenter) < 0) {
+        this.y = canvas.height + this.radius + this.distanceFromCenter;
+      }
+      if (this.y - (this.radius + this.distanceFromCenter) > canvas.height) {
+        this.y = -(this.radius + this.distanceFromCenter);
+      }
     }
 
     //Deceleration
@@ -341,12 +392,13 @@ class Bullet {
 
 //Shockwave class
 class Shockwave {
-  constructor(radius, color, vel, ship) {
+  constructor(radius, color, vel, ship, maxBlastRadius) {
     this.ship = ship;
     this.visible = true;
     this.x = this.ship.x;
     this.y = this.ship.y;
     this.radius = radius;
+    this.maxBlastRadius = maxBlastRadius;
     this.color = color;
     this.vel = vel;
   }

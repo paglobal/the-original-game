@@ -29,7 +29,7 @@ function resolveCollision(particle, otherParticle) {
   const xDist = otherParticle.x - particle.x;
   const yDist = otherParticle.y - particle.y;
 
-  if (xvelDiff * xDist && yvelDiff * yDist >= 0) {
+  if (xvelDiff * xDist >= 0 && yvelDiff * yDist >= 0) {
     const angle = -Math.atan2(
       otherParticle.y - particle.y,
       otherParticle.x - particle.x
@@ -46,7 +46,7 @@ function resolveCollision(particle, otherParticle) {
       y: u1.y,
     };
     const v2 = {
-      x: (u2.x * (m1 - m2)) / (m1 + m2) + (u1.x * 2 * m2) / (m1 + m2),
+      x: (u2.x * (m2 - m1)) / (m1 + m2) + (u1.x * 2 * m2) / (m1 + m2),
       y: u2.y,
     };
 
