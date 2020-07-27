@@ -45,7 +45,6 @@ function initiate() {
   //Canvas instantiation
   canvas = document.querySelector("canvas");
   c = canvas.getContext("2d");
-  c.imageSmoothingEnabled = false;
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   fillColor = "rgba(23, 30, 38, 1)";
@@ -191,8 +190,6 @@ function letTheMagicBegin() {
   c.fillStyle = "rgba(23, 30, 38, 0.2)";
   // c.fillStyle = "rgba(255, 255, 255, 0.08)";
   c.fillRect(0, 0, canvas.width, canvas.height);
-
-  c.imageSmoothingEnabled = false;
 
   drawAndUpdateShips();
 
