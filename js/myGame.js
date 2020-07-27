@@ -45,6 +45,7 @@ function initiate() {
   //Canvas instantiation
   canvas = document.querySelector("canvas");
   c = canvas.getContext("2d");
+  c.imageSmoothingEnabled = false;
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   fillColor = "rgba(23, 30, 38, 1)";
