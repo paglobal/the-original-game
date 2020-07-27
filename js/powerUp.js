@@ -33,8 +33,6 @@ class PowerUp {
     c.save();
     c.globalAlpha = this.opacity;
     c.fillStyle = this.color;
-    c.shadowColor = this.color;
-    c.shadowBlur = canvas.width / 196;
     c.fill();
     c.restore();
     c.closePath();
@@ -95,8 +93,6 @@ class PowerUpAura {
     c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     c.globalAlpha = this.opacity;
     c.fillStyle = this.color;
-    c.shadowColor = this.color;
-    c.shadowBlur = canvas.width / 196;
     c.fill();
     c.closePath();
     c.restore();

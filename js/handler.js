@@ -59,10 +59,6 @@ function handlePowerUpsActive() {
     ships[0].invincibilityTicker++;
   }
 
-  if (!isPaused && ships[0].visible && keys[32] && ships[0].invincible) {
-    ships[0].shoot();
-  }
-
   //Handle clone
   if (ships[1].visibilityTicker === ships[1].visibilityDuration) {
     ships[1].visible = false;

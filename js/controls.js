@@ -105,8 +105,6 @@ function touchmoveControls(e) {
       c.save();
       c.beginPath();
       c.strokeStyle = "white";
-      c.shadowColor = "white";
-      c.shadowBlur = canvas.width / 683;
       c.lineWidth = canvas.width / 683;
       c.moveTo(startX1, startY1);
       c.lineTo(e.changedTouches[i].clientX, e.changedTouches[i].clientY);

@@ -44,7 +44,7 @@ addEventListener("DOMContentLoaded", initiate);
 function initiate() {
   //Canvas instantiation
   canvas = document.querySelector("canvas");
-  c = canvas.getContext("2d");
+  c = canvas.getContext("2d", { alpha: false });
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   fillColor = "rgba(23, 30, 38, 1)";
@@ -187,7 +187,7 @@ function letTheMagicBegin() {
   backgroundGradient.addColorStop(1, "rgba(63,84,107, 0.5)");
 
   //Clear screen with trail effect
-  c.fillStyle = "rgba(23, 30, 38, 0.2)";
+  c.fillStyle = fillColor;
   // c.fillStyle = "rgba(255, 255, 255, 0.08)";
   c.fillRect(0, 0, canvas.width, canvas.height);
 

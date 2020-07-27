@@ -10,7 +10,7 @@ class Ship {
     this.invincibilityTicker = 0;
     this.canShoot = true;
     this.shotTicker = 0;
-    this.shotDuration = 85;
+    this.shotDuration = 10;
     this.nullShotTicker = 0;
     this.nullShotDuration = 50;
     this.teleports = 0;
@@ -80,7 +80,7 @@ class Ship {
 
     if (this.invincible) {
       bulletSpeed = canvas.width / 69;
-      maxBullets = 25;
+      maxBullets = 10;
     } else {
       bulletSpeed = canvas.width / 137;
       maxBullets = 3;
@@ -207,8 +207,6 @@ class Ship {
     c.save();
     c.beginPath();
     c.strokeStyle = this.color;
-    c.shadowColor = this.color;
-    c.shadowBlur = canvas.width / 683;
     c.lineWidth = canvas.width / 683;
     c.moveTo(this.x, this.y);
     c.lineTo(this.x1, this.y1);
@@ -235,8 +233,6 @@ class Ship {
       if (this.invincible) {
         c.save();
         c.strokeStyle = this.color;
-        c.shadowColor = this.color;
-        c.shadowBlur = canvas.width / 391;
         c.lineWidth = canvas.width / 342;
         c.stroke();
         c.closePath();

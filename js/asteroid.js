@@ -40,8 +40,6 @@ class Asteroid {
     c.save();
     c.globalAlpha = this.opacity;
     c.fillStyle = this.color;
-    c.shadowColor = this.color;
-    c.shadowBlur = canvas.width / 196;
     c.fill();
     c.restore();
     c.closePath();
