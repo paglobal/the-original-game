@@ -28,13 +28,13 @@ class Ship {
     this.movingForward = false;
     this.movingBackward = false;
     this.mass = 1;
-    this.explosionBitSize = canvas.width / 1366;
+    this.explosionBitSize = Math.round(canvas.width / 1366);
     this.explosionBitNumber = 30;
     this.radius = radius;
-    this.fragmentRadius = canvas.width / 547;
-    this.ringRadius = canvas.width / 228;
+    this.fragmentRadius = Math.round(canvas.width / 547);
+    this.ringRadius = Math.round(canvas.width / 228);
     this.color = color;
-    this.distanceFromCenter = canvas.width / 76;
+    this.distanceFromCenter = Math.round(canvas.width / 76);
     this.freshlySpawned = false;
     this.freshlySpawnedDuration = 200;
     this.freshlySpawnedTicker = 0;
@@ -53,7 +53,7 @@ class Ship {
       );
     }
     for (let i = 0; i < 1; i++) {
-      let radius = canvas.width / 196;
+      let radius = Math.round(canvas.width / 196);
       this.shipFragments.push(new ShipFragment(radius, "white", this, 0));
     }
   }
@@ -75,14 +75,14 @@ class Ship {
   //Ship shoot method
   shoot() {
     let bulletSpeed;
-    let bulletRadius = canvas.width / 683;
+    let bulletRadius = Math.round(canvas.width / 683);
     let maxBullets;
 
     if (this.invincible) {
-      bulletSpeed = canvas.width / 69;
+      bulletSpeed = Math.round(canvas.width / 69);
       maxBullets = 10;
     } else {
-      bulletSpeed = canvas.width / 137;
+      bulletSpeed = Math.round(canvas.width / 137);
       maxBullets = 3;
     }
 
@@ -115,13 +115,13 @@ class Ship {
     let shockwaveSpeed;
 
     if (this.invincible) {
-      shockwaveSpeed = canvas.width / 137;
+      shockwaveSpeed = Math.round(canvas.width / 137);
     } else {
-      shockwaveSpeed = canvas.width / 274;
+      shockwaveSpeed = Math.round(canvas.width / 274);
     }
     this.shockwaves.push(
       new Shockwave(
-        this.radius + this.distanceFromCenter + canvas.width / 228,
+        this.radius + this.distanceFromCenter + Math.round(canvas.width / 228),
         "#FF7F66",
         shockwaveSpeed,
         this,
@@ -146,8 +146,8 @@ class Ship {
       );
     }
     this.freshlySpawned = true;
-    this.x = canvas.width / 2;
-    this.y = canvas.height / 2;
+    this.x = Math.round(canvas.width / 2);
+    this.y = Math.round(canvas.height / 2);
     this.vel = { x: 0, y: 0 };
     this.angle = 0;
     this.lives -= 1;
@@ -173,7 +173,7 @@ class Ship {
           distance(ships[0].x, ships[0].y, asteroids[i].x, asteroids[i].y) -
             (ships[0].distanceFromCenter +
               ships[0].radius +
-              canvas.width / 28 +
+              Math.round(canvas.width / 28) +
               asteroids[i].radius) <
           0
         ) {
@@ -207,7 +207,7 @@ class Ship {
     c.save();
     c.beginPath();
     c.strokeStyle = this.color;
-    c.lineWidth = canvas.width / 683;
+    c.lineWidth = Math.round(canvas.width / 683);
     c.moveTo(this.x, this.y);
     c.lineTo(this.x1, this.y1);
     c.stroke();
@@ -233,7 +233,7 @@ class Ship {
       if (this.invincible) {
         c.save();
         c.strokeStyle = this.color;
-        c.lineWidth = canvas.width / 342;
+        c.lineWidth = Math.round(canvas.width / 342);
         c.stroke();
         c.closePath();
         c.restore();
@@ -287,10 +287,12 @@ class Ship {
     this.y -= this.vel.y;
 
     //Move ship
-    this.x1 =
-      this.x - (this.radius + this.distanceFromCenter) * Math.cos(this.radians);
-    this.y1 =
-      this.y - (this.radius + this.distanceFromCenter) * Math.sin(this.radians);
+    this.x1 = Math.round(
+      this.x - (this.radius + this.distanceFromCenter) * Math.cos(this.radians)
+    );
+    this.y1 = Math.round(
+      this.y - (this.radius + this.distanceFromCenter) * Math.sin(this.radians)
+    );
 
     this.draw();
   }
@@ -322,10 +324,12 @@ class ShipFragment {
     this.staticRadians += this.staticAngularVel;
 
     //Circular motion
-    this.x1 =
-      this.ship.x + Math.sin(this.staticRadians) * this.distanceFromCenter;
-    this.y1 =
-      this.ship.y + Math.cos(this.staticRadians) * this.distanceFromCenter;
+    this.x1 = Math.round(
+      this.ship.x + Math.sin(this.staticRadians) * this.distanceFromCenter
+    );
+    this.y1 = Math.round(
+      this.ship.y + Math.cos(this.staticRadians) * this.distanceFromCenter
+    );
 
     this.draw();
   }

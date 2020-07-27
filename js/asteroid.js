@@ -6,8 +6,8 @@ class Asteroid {
     this.radius = radius;
     this.color = color;
     this.vel = {
-      x: (Math.random() - 0.5) * (canvas.width / 547),
-      y: (Math.random() - 0.5) * (canvas.width / 547),
+      x: Math.round((Math.random() - 0.5) * (canvas.width / 547)),
+      y: Math.round((Math.random() - 0.5) * (canvas.width / 547)),
     };
     this.mass = 1;
     this.explosionBitSize = canvas.width / 3415;
@@ -87,8 +87,8 @@ class Asteroid {
     }
 
     if (ships[0].invincible) {
-      this.x += this.vel.x / 5;
-      this.y += this.vel.y / 5;
+      this.x += Math.round(this.vel.x / 5);
+      this.y += Math.round(this.vel.y / 5);
     } else {
       this.x += this.vel.x;
       this.y += this.vel.y;

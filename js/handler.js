@@ -19,18 +19,20 @@ function handleGameOver() {
     c.font = `${0.05 * canvas.height}px Candara`;
     c.fillText(
       `GAME OVER!!!`,
-      canvas.width / 2 - 0.09 * canvas.width,
-      canvas.height / 2 - 0.08 * canvas.height
+      Math.round(canvas.width / 2 - 0.09 * canvas.width),
+      Math.round(canvas.height / 2 - 0.08 * canvas.height)
     );
     c.fillText(
       `You scored ${score} points`,
-      canvas.width / 2 - 0.09 * canvas.width,
-      canvas.height / 2 + 0.05 * canvas.height - 0.08 * canvas.height
+      Math.round(canvas.width / 2 - 0.09 * canvas.width),
+      Math.round(
+        canvas.height / 2 + 0.05 * canvas.height - 0.08 * canvas.height
+      )
     );
     c.fillText(
       `Press R to reset`,
-      canvas.width / 2 - 0.09 * canvas.width,
-      canvas.height / 2 + 0.1 * canvas.height - 0.08 * canvas.height
+      Math.round(canvas.width / 2 - 0.09 * canvas.width),
+      Math.round(canvas.height / 2 + 0.1 * canvas.height - 0.08 * canvas.height)
     );
   }
 }
@@ -98,11 +100,11 @@ function handlePowerUpsActive() {
 
   //Handle teleportation info display
   c.fillStyle = textColor;
-  c.font = `${0.03 * canvas.height}px Candara`;
+  c.font = `${Math.round(0.03 * canvas.height)}px Candara`;
   c.fillText(
     `TELEPORTS: ${ships[0].teleports.toString()}`,
-    0.015 * canvas.width,
-    0.07 * canvas.height
+    Math.round(0.015 * canvas.width),
+    Math.round(0.07 * canvas.height)
   );
 }
 
@@ -114,8 +116,8 @@ function handleReset() {
       score = 0;
       ships[0].lives = 7;
       ships[0].angle = 0;
-      ships[0].x = canvas.width / 2;
-      ships[0].y = canvas.height / 2;
+      ships[0].x = Math.round(canvas.width / 2);
+      ships[0].y = Math.round(canvas.height / 2);
       ships[0].vel = { x: 0, y: 0 };
       ships[0].bullets.splice(0, ships[0].bullets.length);
       asteroids.splice(0, asteroids.length);
@@ -140,21 +142,23 @@ function handlePaused() {
 
   if (isPaused) {
     c.fillStyle = textColor;
-    c.font = `${0.05 * canvas.height}px Candara`;
+    c.font = `${Math.round(0.05 * canvas.height)}px Candara`;
     c.fillText(
       `Paused`,
-      canvas.width / 2 - 0.09 * canvas.width,
-      canvas.height / 2 - 0.08 * canvas.height
+      Math.round(canvas.width / 2 - 0.09 * canvas.width),
+      Math.round(canvas.height / 2 - 0.08 * canvas.height)
     );
     c.fillText(
       `Press P To Proceed`,
-      canvas.width / 2 - 0.09 * canvas.width,
-      canvas.height / 2 + 0.05 * canvas.height - 0.08 * canvas.height
+      Math.round(canvas.width / 2 - 0.09 * canvas.width),
+      Math.round(
+        canvas.height / 2 + 0.05 * canvas.height - 0.08 * canvas.height
+      )
     );
     c.fillText(
       `Scroll down for further instructions`,
-      canvas.width / 2 - 0.09 * canvas.width,
-      canvas.height / 2 + 0.1 * canvas.height - 0.08 * canvas.height
+      Math.round(canvas.width / 2 - 0.09 * canvas.width),
+      Math.round(canvas.height / 2 + 0.1 * canvas.height - 0.08 * canvas.height)
     );
   }
 }
@@ -163,19 +167,19 @@ function handlePaused() {
 function handleScoreAndLivesDisplay() {
   //Handle score display
   c.fillStyle = textColor;
-  c.font = `${0.03 * canvas.height}px Candara`;
+  c.font = `${Math.round(0.03 * canvas.height)}px Candara`;
   c.fillText(
     `LIVES: ${ships[0].lives.toString()}`,
-    0.015 * canvas.width,
-    0.105 * canvas.height
+    Math.round(0.015 * canvas.width),
+    Math.round(0.105 * canvas.height)
   );
 
   //Handle lives display
   c.fillStyle = textColor;
-  c.font = `${0.03 * canvas.height}px Candara`;
+  c.font = `${Math.round(0.03 * canvas.height)}px Candara`;
   c.fillText(
     `SCORE: ${score.toString()}`,
-    0.015 * canvas.width,
-    0.035 * canvas.height
+    Math.round(0.015 * canvas.width),
+    Math.round(0.035 * canvas.height)
   );
 }

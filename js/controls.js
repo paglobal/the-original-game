@@ -101,16 +101,16 @@ function touchmoveControls(e) {
     ) {
       touchmove1 = true;
 
-      //Draw rotation line
-      c.save();
-      c.beginPath();
-      c.strokeStyle = "white";
-      c.lineWidth = canvas.width / 683;
-      c.moveTo(startX1, startY1);
-      c.lineTo(e.changedTouches[i].clientX, e.changedTouches[i].clientY);
-      c.stroke();
-      c.closePath();
-      c.restore();
+      // //Draw rotation line
+      // c.save();
+      // c.beginPath();
+      // c.strokeStyle = "white";
+      // c.lineWidth = canvas.width / 683;
+      // c.moveTo(startX1, startY1);
+      // c.lineTo(e.changedTouches[i].clientX, e.changedTouches[i].clientY);
+      // c.stroke();
+      // c.closePath();
+      // c.restore();
 
       //Rotate ship
       let x = startX1 - e.changedTouches[i].clientX;

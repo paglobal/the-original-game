@@ -58,9 +58,9 @@ function initiate() {
   //Player ship
   ships.push(
     new Ship(
-      canvas.width / 2,
-      canvas.height / 2,
-      canvas.width / 466,
+      Math.round(canvas.width / 2),
+      Math.round(canvas.height / 2),
+      Math.round(canvas.width / 466),
       "white",
       7
     )
@@ -68,11 +68,15 @@ function initiate() {
   //Clone
   ships.push(
     new Ship(
-      ships[0].x +
-        Math.cos(ships[0].radians) * 3.5 * ships[0].distanceFromCenter,
-      ships[0].y +
-        Math.sin(ships[0].radians) * 3.5 * ships[0].distanceFromCenter,
-      canvas.width / 466,
+      Math.round(
+        ships[0].x +
+          Math.cos(ships[0].radians) * 3.5 * ships[0].distanceFromCenter
+      ),
+      Math.round(
+        ships[0].y +
+          Math.sin(ships[0].radians) * 3.5 * ships[0].distanceFromCenter
+      ),
+      Math.round(canvas.width / 466),
       "#FF7F66",
       7
     )
