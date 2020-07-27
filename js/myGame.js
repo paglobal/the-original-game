@@ -192,6 +192,8 @@ function letTheMagicBegin() {
   // c.fillStyle = "rgba(255, 255, 255, 0.08)";
   c.fillRect(0, 0, canvas.width, canvas.height);
 
+  c.imageSmoothingEnabled = false;
+
   drawAndUpdateShips();
 
   drawAndUpdateBullets();
