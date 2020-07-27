@@ -124,6 +124,13 @@ function initiate() {
     keys[e.keyCode] = false;
   });
 
+  //Touchscreen controls event listeners
+  canvas.addEventListener("touchstart", touchstartControls);
+
+  canvas.addEventListener("touchmove", touchmoveControls);
+
+  canvas.addEventListener("touchend", touchendControls);
+
   //Clear screen timeout
   window.setInterval(clearScreen, 5000);
 
