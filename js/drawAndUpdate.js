@@ -23,13 +23,10 @@ function drawAndUpdateShips() {
     //Update clone linear displacement
     ships[1].x =
       ships[0].x +
-      Math.round(
-        Math.cos(ships[0].radians) * 3.5 * ships[0].distanceFromCenter
-      );
-    ships[1].y = Math.round(
+      Math.cos(ships[0].radians) * 3.5 * ships[0].distanceFromCenter;
+    ships[1].y =
       ships[0].y +
-        Math.sin(ships[0].radians) * 3.5 * ships[0].distanceFromCenter
-    );
+      Math.sin(ships[0].radians) * 3.5 * ships[0].distanceFromCenter;
 
     //Update clone angular displacement
     ships[1].angle = ships[0].angle + 180;
@@ -67,15 +64,12 @@ function drawAndUpdateShips() {
           //Circular motion
           shipFragment.x1 =
             ships[0].x +
-            Math.round(
-              Math.sin(shipFragment.staticRadians) *
-                shipFragment.distanceFromCenter
-            );
-          shipFragment.y1 = Math.round(
+            Math.sin(shipFragment.staticRadians) *
+              shipFragment.distanceFromCenter;
+          shipFragment.y1 =
             ships[0].y +
-              Math.cos(shipFragment.staticRadians) *
-                shipFragment.distanceFromCenter
-          );
+            Math.cos(shipFragment.staticRadians) *
+              shipFragment.distanceFromCenter;
         }
         shipFragment.draw();
       }
@@ -92,16 +86,14 @@ function drawAndUpdateShips() {
           //Move points over time
           shipFragment.staticRadians += shipFragment.staticAngularVel;
           //Circular motion
-          shipFragment.x1 = Math.round(
+          shipFragment.x1 =
             ships[1].x +
-              Math.sin(shipFragment.staticRadians) *
-                shipFragment.distanceFromCenter
-          );
-          shipFragment.y1 = Math.round(
+            Math.sin(shipFragment.staticRadians) *
+              shipFragment.distanceFromCenter;
+          shipFragment.y1 =
             ships[1].y +
-              Math.cos(shipFragment.staticRadians) *
-                shipFragment.distanceFromCenter
-          );
+            Math.cos(shipFragment.staticRadians) *
+              shipFragment.distanceFromCenter;
         }
         shipFragment.draw();
       }

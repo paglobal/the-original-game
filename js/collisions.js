@@ -17,7 +17,7 @@ function shipAndAsteroidCollision() {
               !ships[0].freshlySpawned
             ) {
               if (asteroids[i].radius > canvas.width / 92) {
-                asteroids[i].radius -= Math.round(canvas.width / 151);
+                asteroids[i].radius -= canvas.width / 151;
                 asteroids[i].explode();
                 asteroids.push(
                   new Asteroid(
@@ -73,7 +73,7 @@ function shipAndAsteroidCollision() {
               !ships[1].freshlySpawned
             ) {
               if (asteroids[i].radius > canvas.width / 92) {
-                asteroids[i].radius -= Math.round(canvas.width / 151);
+                asteroids[i].radius -= canvas.width / 151;
                 asteroids[i].explode();
                 asteroids.push(
                   new Asteroid(
@@ -193,14 +193,12 @@ function shipAndPowerUpCollision() {
                 (ships[0].distanceFromCenter + ships[1].distanceFromCenter) >
               0
             ) {
-              ships[1].x = Math.round(
+              ships[1].x =
                 ships[0].x +
-                  Math.cos(ships[0].radians) * 3.5 * ships[0].distanceFromCenter
-              );
-              ships[1].y = Math.round(
+                Math.cos(ships[0].radians) * 3.5 * ships[0].distanceFromCenter;
+              ships[1].y =
                 ships[0].y +
-                  Math.sin(ships[0].radians) * 3.5 * ships[0].distanceFromCenter
-              );
+                Math.sin(ships[0].radians) * 3.5 * ships[0].distanceFromCenter;
             }
             if (!ships[1].visible) {
               let s = spawned.cloneNode();
@@ -289,7 +287,7 @@ function bulletAndAsteroidCollision() {
             0
           ) {
             if (asteroids[i].radius > canvas.width / 92) {
-              asteroids[i].radius -= Math.round(canvas.width / 151);
+              asteroids[i].radius -= canvas.width / 151;
               asteroids[i].explode();
               asteroids.push(
                 new Asteroid(
@@ -335,7 +333,7 @@ function bulletAndAsteroidCollision() {
             0
           ) {
             if (asteroids[i].radius > canvas.width / 92) {
-              asteroids[i].radius -= Math.round(canvas.width / 151);
+              asteroids[i].radius -= canvas.width / 151;
               asteroids[i].explode();
               asteroids.push(
                 new Asteroid(

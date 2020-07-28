@@ -47,8 +47,8 @@ class Bullet {
     // }
 
     //Move bullet
-    this.x -= Math.round(Math.cos(this.radians) * this.vel);
-    this.y -= Math.round(Math.sin(this.radians) * this.vel);
+    this.x -= Math.cos(this.radians) * this.vel;
+    this.y -= Math.sin(this.radians) * this.vel;
 
     this.draw();
   }

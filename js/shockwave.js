@@ -17,7 +17,7 @@ class Shockwave {
     c.beginPath();
     c.arc(this.ship.x, this.ship.y, this.radius, 0, Math.PI * 2, false);
     c.strokeStyle = this.color;
-    c.lineWidth = Math.round(canvas.width / 274);
+    c.lineWidth = canvas.width / 274;
     c.stroke();
     c.closePath();
     c.restore();

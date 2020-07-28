@@ -44,7 +44,7 @@ addEventListener("DOMContentLoaded", initiate);
 function initiate() {
   //Canvas instantiation
   canvas = document.querySelector("canvas");
-  c = canvas.getContext("2d", { alpha: false });
+  c = canvas.getContext("2d");
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   fillColor = "rgba(23, 30, 38, 1)";
@@ -58,9 +58,9 @@ function initiate() {
   //Player ship
   ships.push(
     new Ship(
-      Math.round(canvas.width / 2),
-      Math.round(canvas.height / 2),
-      Math.round(canvas.width / 466),
+      canvas.width / 2,
+      canvas.height / 2,
+      canvas.width / 466,
       "white",
       7
     )
@@ -68,15 +68,11 @@ function initiate() {
   //Clone
   ships.push(
     new Ship(
-      Math.round(
-        ships[0].x +
-          Math.cos(ships[0].radians) * 3.5 * ships[0].distanceFromCenter
-      ),
-      Math.round(
-        ships[0].y +
-          Math.sin(ships[0].radians) * 3.5 * ships[0].distanceFromCenter
-      ),
-      Math.round(canvas.width / 466),
+      ships[0].x +
+        Math.cos(ships[0].radians) * 3.5 * ships[0].distanceFromCenter,
+      ships[0].y +
+        Math.sin(ships[0].radians) * 3.5 * ships[0].distanceFromCenter,
+      canvas.width / 466,
       "#FF7F66",
       7
     )
@@ -191,7 +187,7 @@ function letTheMagicBegin() {
   backgroundGradient.addColorStop(1, "rgba(63,84,107, 0.5)");
 
   //Clear screen with trail effect
-  c.fillStyle = fillColor;
+  c.fillStyle = "rgba(23, 30, 38, 0.2)";
   // c.fillStyle = "rgba(255, 255, 255, 0.08)";
   c.fillRect(0, 0, canvas.width, canvas.height);
 

@@ -19,20 +19,18 @@ function handleGameOver() {
     c.font = `${0.05 * canvas.height}px Candara`;
     c.fillText(
       `GAME OVER!!!`,
-      Math.round(canvas.width / 2 - 0.09 * canvas.width),
-      Math.round(canvas.height / 2 - 0.08 * canvas.height)
+      canvas.width / 2 - 0.09 * canvas.width,
+      canvas.height / 2 - 0.08 * canvas.height
     );
     c.fillText(
       `You scored ${score} points`,
-      Math.round(canvas.width / 2 - 0.09 * canvas.width),
-      Math.round(
-        canvas.height / 2 + 0.05 * canvas.height - 0.08 * canvas.height
-      )
+      canvas.width / 2 - 0.09 * canvas.width,
+      canvas.height / 2 + 0.05 * canvas.height - 0.08 * canvas.height
     );
     c.fillText(
       `Press R to reset`,
-      Math.round(canvas.width / 2 - 0.09 * canvas.width),
-      Math.round(canvas.height / 2 + 0.1 * canvas.height - 0.08 * canvas.height)
+      canvas.width / 2 - 0.09 * canvas.width,
+      canvas.height / 2 + 0.1 * canvas.height - 0.08 * canvas.height
     );
   }
 }
@@ -59,6 +57,10 @@ function handlePowerUpsActive() {
 
   if (ships[0].invincible === true) {
     ships[0].invincibilityTicker++;
+  }
+
+  if (!isPaused && ships[0].visible && keys[32] && ships[0].invincible) {
+    ships[0].shoot();
   }
 
   //Handle clone
@@ -100,11 +102,11 @@ function handlePowerUpsActive() {
 
   //Handle teleportation info display
   c.fillStyle = textColor;
-  c.font = `${Math.round(0.03 * canvas.height)}px Candara`;
+  c.font = `${0.03 * canvas.height}px Candara`;
   c.fillText(
     `TELEPORTS: ${ships[0].teleports.toString()}`,
-    Math.round(0.015 * canvas.width),
-    Math.round(0.07 * canvas.height)
+    0.015 * canvas.width,
+    0.07 * canvas.height
   );
 }
 
@@ -116,8 +118,8 @@ function handleReset() {
       score = 0;
       ships[0].lives = 7;
       ships[0].angle = 0;
-      ships[0].x = Math.round(canvas.width / 2);
-      ships[0].y = Math.round(canvas.height / 2);
+      ships[0].x = canvas.width / 2;
+      ships[0].y = canvas.height / 2;
       ships[0].vel = { x: 0, y: 0 };
       ships[0].bullets.splice(0, ships[0].bullets.length);
       asteroids.splice(0, asteroids.length);
@@ -142,23 +144,21 @@ function handlePaused() {
 
   if (isPaused) {
     c.fillStyle = textColor;
-    c.font = `${Math.round(0.05 * canvas.height)}px Candara`;
+    c.font = `${0.05 * canvas.height}px Candara`;
     c.fillText(
       `Paused`,
-      Math.round(canvas.width / 2 - 0.09 * canvas.width),
-      Math.round(canvas.height / 2 - 0.08 * canvas.height)
+      canvas.width / 2 - 0.09 * canvas.width,
+      canvas.height / 2 - 0.08 * canvas.height
     );
     c.fillText(
       `Press P To Proceed`,
-      Math.round(canvas.width / 2 - 0.09 * canvas.width),
-      Math.round(
-        canvas.height / 2 + 0.05 * canvas.height - 0.08 * canvas.height
-      )
+      canvas.width / 2 - 0.09 * canvas.width,
+      canvas.height / 2 + 0.05 * canvas.height - 0.08 * canvas.height
     );
     c.fillText(
       `Scroll down for further instructions`,
-      Math.round(canvas.width / 2 - 0.09 * canvas.width),
-      Math.round(canvas.height / 2 + 0.1 * canvas.height - 0.08 * canvas.height)
+      canvas.width / 2 - 0.09 * canvas.width,
+      canvas.height / 2 + 0.1 * canvas.height - 0.08 * canvas.height
     );
   }
 }
@@ -167,19 +167,19 @@ function handlePaused() {
 function handleScoreAndLivesDisplay() {
   //Handle score display
   c.fillStyle = textColor;
-  c.font = `${Math.round(0.03 * canvas.height)}px Candara`;
+  c.font = `${0.03 * canvas.height}px Candara`;
   c.fillText(
     `LIVES: ${ships[0].lives.toString()}`,
-    Math.round(0.015 * canvas.width),
-    Math.round(0.105 * canvas.height)
+    0.015 * canvas.width,
+    0.105 * canvas.height
   );
 
   //Handle lives display
   c.fillStyle = textColor;
-  c.font = `${Math.round(0.03 * canvas.height)}px Candara`;
+  c.font = `${0.03 * canvas.height}px Candara`;
   c.fillText(
     `SCORE: ${score.toString()}`,
-    Math.round(0.015 * canvas.width),
-    Math.round(0.035 * canvas.height)
+    0.015 * canvas.width,
+    0.035 * canvas.height
   );
 }
