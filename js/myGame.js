@@ -23,8 +23,8 @@ let justStarted = true;
 let darkTheme = true;
 //Audio
 window.onload = function () {
-  // let firstTheme = document.querySelector("#firstTheme");
-  // firstTheme.volume = 0.4;
+  let firstTheme = document.querySelector("#firstTheme");
+  firstTheme.volume = 0.4;
   // let secondTheme = document.querySelector("#secondTheme");
   // secondTheme.volume = 0.4;
   // let thirdTheme = document.querySelector("#thirdTheme");
@@ -175,6 +175,20 @@ function initiate() {
   //   thirdTheme.pause();
   //   firstTheme.play();
   // }
+
+  function startMusic() {
+    firstTheme.play();
+    document.removeEventListener("keyup", startMusic);
+  }
+
+  document.addEventListener("keyup", startMusic);
+
+  firstTheme.addEventListener("ended", first, false);
+
+  function first() {
+    thirdTheme.pause();
+    firstTheme.play();
+  }
 
   letTheMagicBegin();
 }
